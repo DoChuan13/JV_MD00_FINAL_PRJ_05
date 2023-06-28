@@ -23,7 +23,7 @@ dependencies {
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '6.2.5.Final'
 
     compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok'
     /*8. Spring Security Web*/
     // https://mvnrepository.com/artifact/org.springframework.security/spring-security-web
     implementation group: 'org.springframework.security', name: 'spring-security-web', version: '5.4.11'
