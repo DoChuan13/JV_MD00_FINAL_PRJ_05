@@ -14,23 +14,30 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'mysql:mysql-connector-java'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
-    implementation group: 'org.hibernate', name: 'hibernate-validator', version: '6.2.5.Final'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    //Not compare
+    /*implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    implementation group: 'org.hibernate', name: 'hibernate-validator', version: '6.2.5.Final'*/
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     /*8. Spring Security Web*/
-    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-web
+    /*// https://mvnrepository.com/artifact/org.springframework.security/spring-security-web
     implementation group: 'org.springframework.security', name: 'spring-security-web', version: '5.4.11'
     // https://mvnrepository.com/artifact/org.springframework.security/spring-security-config
     implementation group: 'org.springframework.security', name: 'spring-security-config', version: '5.4.11'
     // https://mvnrepository.com/artifact/org.springframework.security/spring-security-taglibs
-    implementation group: 'org.springframework.security', name: 'spring-security-taglibs', version: '5.4.11'
+    implementation group: 'org.springframework.security', name: 'spring-security-taglibs', version: '5.4.11'*/
 
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
