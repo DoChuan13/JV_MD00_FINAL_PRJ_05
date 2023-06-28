@@ -26,6 +26,6 @@ public class Friend {
     private User respUser;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "varchar(255) default ('PENDING')")
+    @Column(nullable = false)
     private FriendStatus status = FriendStatus.PENDING;
 }

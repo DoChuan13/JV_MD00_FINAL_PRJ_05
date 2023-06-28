@@ -25,9 +25,9 @@ public class Post {
     @Column(nullable = false)
     private String content;
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "varchar(255) default ('PUBLIC')")
+    @Column(nullable = false)
     private PostStatus status;
-    @Column(nullable = false, columnDefinition = "datetime default (now())")
+    @Column(nullable = false)
     private Date postTime = new Date();
 
     @OneToMany(fetch = FetchType.EAGER)

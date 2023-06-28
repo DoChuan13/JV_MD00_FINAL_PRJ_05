@@ -49,11 +49,11 @@ public class User {
     private String password;
 
     @Lob
-    @Column(columnDefinition = "longtext default ('https://firebasestorage.googleapis.com/v0/b/java-full-stack-76e1c.appspot.com/o/avatar.jpeg?alt=media&token=0dd6e72d-fcaf-4565-beec-76c89347767c')")
+    @Column()
     private String avatar
             = "https://firebasestorage.googleapis.com/v0/b/java-full-stack-76e1c.appspot.com/o/avatar.jpeg?alt=media&token=0dd6e72d-fcaf-4565-beec-76c89347767c";
 
-    @Column(columnDefinition = "bit default (0)")
+    @Column()
     private Boolean status = false;
 
     @ManyToMany(fetch = FetchType.EAGER)

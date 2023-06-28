@@ -26,6 +26,6 @@ public class Like {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", foreignKey = @ForeignKey(name = "fk_like_user_Id"))
     private User user;
-    @Column(nullable = false, columnDefinition = "datetime default (now())")
+    @Column(nullable = false)
     private Date likeTime = new Date();
 }

@@ -28,6 +28,6 @@ public class Comment {
 
     @Column(nullable = false)
     private String comment;
-    @Column(nullable = false, columnDefinition = "datetime default (now())")
+    @Column(nullable = false)
     private Date commentTime = new Date();
 }

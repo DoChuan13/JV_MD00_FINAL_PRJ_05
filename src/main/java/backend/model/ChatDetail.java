@@ -31,6 +31,6 @@ public class ChatDetail {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false, columnDefinition = "datetime default (now())")
+    @Column(nullable = false)
     private Date sentTime = new Date();
 }

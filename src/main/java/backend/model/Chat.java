@@ -30,9 +30,9 @@ public class Chat {
     private Date sentIn;
     @Column(name = "respIn")
     private Date respIn;
-    @Column(name = "createTime", nullable = false, columnDefinition = "datetime default (now())")
+    @Column(name = "createTime", nullable = false)
     private Date createTime = new Date();
-    @Column(name = "latestTime", nullable = false, columnDefinition = "datetime default (now())")
+    @Column(name = "latestTime", nullable = false)
     private Date latestTime = new Date();
 
     @OneToMany(fetch = FetchType.EAGER)
