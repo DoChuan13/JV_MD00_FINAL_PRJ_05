@@ -30,7 +30,7 @@ public class Post {
     @Column(nullable = false)
     private Date postTime = new Date();
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "postId")
     private List<Comment> comments = new ArrayList<>();
     @OneToMany

@@ -9,7 +9,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
-@CrossOrigin(origins = {"*","https://fakebook-dochuan.netlify.app"},allowCredentials = "true")
+@CrossOrigin(origins = {"*"})
 public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
