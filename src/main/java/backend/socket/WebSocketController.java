@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.util.HtmlUtils;
 
 @Controller
-@CrossOrigin(origins = {"*"})
+@CrossOrigin(origins = {"*","https://fakebook-dochuan.netlify.app"},allowCredentials = "true")
 public class WebSocketController {
     private static final Logger logger = LoggerFactory.getLogger(WebSocketController.class);
 
