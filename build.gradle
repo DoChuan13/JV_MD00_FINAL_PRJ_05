@@ -21,19 +21,22 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '6.0.10.Final'
-    // Security
-    implementation group: 'org.springframework.security', name: 'spring-security-web', version: '5.4.2'
 
-    implementation group: 'org.springframework.security', name: 'spring-security-config', version: '5.4.2'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
-    implementation group: 'org.springframework.security', name: 'spring-security-taglibs', version: '5.4.2'
+    /*8. Spring Security Web*/
+    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-web
+    implementation group: 'org.springframework.security', name: 'spring-security-web', version: '5.4.11'
+    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-config
+    implementation group: 'org.springframework.security', name: 'spring-security-config', version: '5.4.11'
+    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-taglibs
+    implementation group: 'org.springframework.security', name: 'spring-security-taglibs', version: '5.4.11'
+    // https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity5
+    implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5', version: '3.1.1.RELEASE'
 
-    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-core
-    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.4.3'
-
-    //JWT
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
-    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 }
 
 test {
