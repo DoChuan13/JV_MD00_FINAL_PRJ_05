@@ -1,11 +1,13 @@
 package backend.service.post;
 
 import backend.model.Post;
+import backend.model.User;
 import backend.service.IGenericService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IPostService extends IGenericService<Post> {
     boolean checkOwnerPost(Post post);
@@ -20,8 +22,10 @@ public interface IPostService extends IGenericService<Post> {
 
     void deleteByUserId(Long id);
 
-    Iterable<Post> findPostsByUserId(Long id);
+    Optional<Post> findPostsByCommentId(Long id);
 
-    //Image
-    void deleteOleImagesPostId(Long id);
+    Iterable<Post> findByLikeUserId(Long id);
+
+    Iterable<Post> findByCommentUserId(Long id);
+    void deletePostByUser(User user);
 }

@@ -8,7 +8,6 @@ import backend.model.ChatDetail;
 import backend.model.User;
 import backend.security.userprincipal.UserDetailsServiceIMPL;
 import backend.service.chat.IChatService;
-import backend.service.chat.detail.IChatDetailService;
 import backend.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,16 +29,14 @@ public class ChatDetailController {
     @Autowired
     private IChatService chatService;
     @Autowired
-    private IChatDetailService chatDetailService;
-    @Autowired
     private UserDetailsServiceIMPL userDetailsService;
 
     @PostMapping
     public ResponseEntity<?> sendChat(
-            @Valid
-            @RequestBody
-            ChatDetailDTO chatDetailDTO,
-            BindingResult result) {
+        @Valid
+        @RequestBody
+        ChatDetailDTO chatDetailDTO,
+        BindingResult result) {
         User user = userDetailsService.getCurrentUser();
         if (!(userService.hasUserRole(user))) {
             responseMessage.setMessage(Constant.DENY_PERMISSION);
@@ -70,11 +67,10 @@ public class ChatDetailController {
         currentChat.setRespIn(currentChat.getRespIn() == null ? new Date() : currentChat.getRespIn());
         currentChat.setLatestTime(new Date());
         ChatDetail chatDetail = new ChatDetail();
-        chatDetail.setChat(currentChat);
         chatDetail.setUser(user);
         chatDetail.setContent(chatDetailDTO.getContent());
+        currentChat.getChatDetails().add(chatDetail);
         chatService.save(currentChat);
-        chatDetailService.save(chatDetail);
 
         responseMessage.setMessage(Constant.CHAT_SEND_SUCCESS);
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);

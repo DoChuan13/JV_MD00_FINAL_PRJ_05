@@ -5,7 +5,6 @@ import backend.model.Post;
 import backend.model.User;
 import backend.model.enums.FriendStatus;
 import backend.model.enums.PostStatus;
-import backend.repository.IImageRepository;
 import backend.repository.IPostRepository;
 import backend.security.userprincipal.UserDetailsServiceIMPL;
 import backend.service.friend.IFriendService;
@@ -27,8 +26,6 @@ public class PostServiceIMPL implements IPostService {
     private UserDetailsServiceIMPL userDetailsService;
     @Autowired
     private IFriendService friendService;
-    @Autowired
-    private IImageRepository imageRepository;
 
     @Override
     public Iterable<Post> findAll() {
@@ -82,7 +79,7 @@ public class PostServiceIMPL implements IPostService {
         List<Post> result;
         result = postRepository.findAllByUserIdOrderByPostTimeDesc(user.getId());
         List<Friend> friends = (List<Friend>) friendService.findListFriendByUserIdWithStatus(user.getId(),
-                                                                                             FriendStatus.ACCEPT);
+            FriendStatus.ACCEPT);
         for (Friend friend : friends) {
             Long sentId = friend.getSentUser().getId();
             Long respId = friend.getRespUser().getId();
@@ -118,20 +115,31 @@ public class PostServiceIMPL implements IPostService {
     }
 
     @Override
-    public Iterable<Post> findPostsByUserId(Long id) {
-        return postRepository.findPostsByUserId(id);
+    public Optional<Post> findPostsByCommentId(Long id) {
+        return postRepository.findPostsByCommentId(id);
     }
 
     @Override
-    public void deleteOleImagesPostId(Long id) {
-        imageRepository.deleteByPostId(id);
+    public Iterable<Post> findByLikeUserId(Long id) {
+        return postRepository.findByLikeUserId(id);
     }
+
+    @Override
+    public Iterable<Post> findByCommentUserId(Long id) {
+        return postRepository.findByCommentUserId(id);
+    }
+
+    @Override
+    public void deletePostByUser(User user) {
+        postRepository.deleteByUserId(user.getId());
+    }
+
 
     private static class ComparatorPost implements Comparator<Post> {
         @Override
         public int compare(
-                Post o1,
-                Post o2) {
+            Post o1,
+            Post o2) {
             return -(o1.getPostTime().compareTo(o2.getPostTime()));
         }
     }

@@ -7,7 +7,6 @@ import backend.model.Like;
 import backend.model.Post;
 import backend.model.User;
 import backend.security.userprincipal.UserDetailsServiceIMPL;
-import backend.service.like.ILikeService;
 import backend.service.post.IPostService;
 import backend.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -29,16 +29,14 @@ public class LikeController {
     @Autowired
     private IUserService userService;
     @Autowired
-    private ILikeService likeService;
-    @Autowired
     private UserDetailsServiceIMPL userDetailsService;
 
     @PostMapping
     public ResponseEntity<?> likeUnlikePost(
-            @Valid
-            @RequestBody
-            LikeDTO likeDTO,
-            BindingResult result) {
+        @Valid
+        @RequestBody
+        LikeDTO likeDTO,
+        BindingResult result) {
         User user = userDetailsService.getCurrentUser();
         if (!(userService.hasUserRole(user))) {
             responseMessage.setMessage(Constant.DENY_PERMISSION);
@@ -58,18 +56,26 @@ public class LikeController {
             responseMessage.setMessage(Constant.POST_NOT_FOUND);
             return new ResponseEntity<>(responseMessage, HttpStatus.OK);
         }
-        Optional<Like> findLike = likeService.findByPostIdAndUserId(likeDTO.getPost().getId(), user.getId());
-        if (!findLike.isPresent()) {
-            Like like = new Like();
-            like.setPost(findPost.get());
-            like.setUser(user);
-            likeService.save(like);
-
-            responseMessage.setMessage(Constant.LIKE_LIKE_SUCCESS);
-        } else {
-            likeService.deleteById(findLike.get().getId());
-            responseMessage.setMessage(Constant.LIKE_UNLIKE_SUCCESS);
+        Post currentPost = findPost.get();
+        boolean flag = false;
+        List<Like> likes = currentPost.getLikes();
+        for (int i = 0; i < likes.size(); i++) {
+            if (likes.get(i).getUser().getId().longValue() == user.getId().longValue()) {
+                likes.remove(i);
+                flag = true;
+                break;
+            }
         }
+        if (flag) {
+            responseMessage.setMessage(Constant.LIKE_UNLIKE_SUCCESS);
+        } else {
+            Like like = new Like();
+            like.setUser(user);
+            likes.add(like);
+            responseMessage.setMessage(Constant.LIKE_LIKE_SUCCESS);
+        }
+        postService.save(currentPost);
+
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 }

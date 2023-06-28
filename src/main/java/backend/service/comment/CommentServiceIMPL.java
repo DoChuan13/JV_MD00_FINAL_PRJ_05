@@ -3,6 +3,7 @@ package backend.service.comment;
 import backend.model.Comment;
 import backend.model.User;
 import backend.repository.ICommentRepository;
+import backend.repository.IPostRepository;
 import backend.security.userprincipal.UserDetailsServiceIMPL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,8 @@ import java.util.Optional;
 public class CommentServiceIMPL implements ICommentService {
     @Autowired
     private ICommentRepository commentRepository;
+    @Autowired
+    private IPostRepository postRepository;
     @Autowired
     private UserDetailsServiceIMPL userDetailsService;
 
@@ -43,7 +46,7 @@ public class CommentServiceIMPL implements ICommentService {
     }
 
     @Override
-    public void deleteByPostId(Long id) {
-        commentRepository.deleteByPostId(id);
+    public Optional<Comment> findCommentByCommentId(Long id) {
+        return postRepository.findCommentByCommentId(id);
     }
 }

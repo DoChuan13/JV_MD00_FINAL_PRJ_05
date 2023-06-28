@@ -19,9 +19,7 @@ public class ChatDetail {
     private Long id;
 
     @JsonIgnore
-    @ManyToOne
-    /*(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)*/
-    @JoinColumn(name = "chatId", foreignKey = @ForeignKey(name = "fk_cd_chat_Id"))
+    @Transient
     private Chat chat;
 
     @ManyToOne(fetch = FetchType.EAGER)

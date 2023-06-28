@@ -35,7 +35,7 @@ public class Chat {
     @Column(name = "latestTime", nullable = false)
     private Date latestTime = new Date();
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "chatId")
     private List<ChatDetail> chatDetails = new ArrayList<>();
 }

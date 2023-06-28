@@ -18,8 +18,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "postId", foreignKey = @ForeignKey(name = "fk_comment_post_Id"))
+    @Transient
     private Post post;
 
     @ManyToOne(fetch = FetchType.EAGER)

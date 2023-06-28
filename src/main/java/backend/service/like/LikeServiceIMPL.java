@@ -18,13 +18,6 @@ public class LikeServiceIMPL implements ILikeService {
     }
 
     @Override
-    public Optional<Like> findByPostIdAndUserId(
-            Long postId,
-            Long userId) {
-        return likeRepository.findByPostIdAndUserId(postId, userId);
-    }
-
-    @Override
     public void deleteById(Long id) {
         likeRepository.deleteById(id);
     }
@@ -32,10 +25,5 @@ public class LikeServiceIMPL implements ILikeService {
     @Override
     public void deleteByUserId(Long id) {
         likeRepository.deleteByUserId(id);
-    }
-
-    @Override
-    public void deleteByPostId(Long id) {
-        likeRepository.deleteByPostId(id);
     }
 }

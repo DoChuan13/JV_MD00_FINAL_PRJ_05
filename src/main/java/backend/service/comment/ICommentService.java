@@ -15,5 +15,5 @@ public interface ICommentService {
 
     void deleteByUserId(Long id);
 
-    void deleteByPostId(Long id);
+    Optional<Comment> findCommentByCommentId(Long id);
 }

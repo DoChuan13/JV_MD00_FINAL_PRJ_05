@@ -8,19 +8,15 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 public interface IChatService extends IGenericService<Chat> {
-    Iterable<Chat> findBySentUserIdOrRespUserId(
-            Long sentId,
-            Long respId);
+    Optional<Chat> findChatBy2UserId(Long id1,Long id2);
 
     Iterable<Chat> findListChatByUserId(Long id);
 
-    Optional<Chat> findBySentUserIdAndRespUserId(
-            Long sentId,
-            Long respId);
-
     Page<Chat> findPageChatByUserId(
-            Long id,
-            Pageable pageable);
+        Long id,
+        Pageable pageable);
 
-    void deleteByUserId(Long id);
+    void deleteAllChatByUserId(Long id);
+
+    Iterable<Chat> findChatByUserId( Long id);
 }

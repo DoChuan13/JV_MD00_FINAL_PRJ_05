@@ -20,10 +20,9 @@ public class Like {
     private Long id;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "postId", foreignKey = @ForeignKey(name = "fk_like_post_Id"))
+    @Transient
     private Post post;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "userId", foreignKey = @ForeignKey(name = "fk_like_user_Id"))
     private User user;
     @Column(nullable = false)

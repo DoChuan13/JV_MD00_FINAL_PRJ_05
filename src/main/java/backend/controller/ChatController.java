@@ -37,7 +37,7 @@ public class ChatController {
 
     @GetMapping(value = {"/{id}"})
     public ResponseEntity<?> getChatDetail(
-            @PathVariable Long id) {
+        @PathVariable Long id) {
         User user = userDetailsService.getCurrentUser();
         if (!(userService.hasUserRole(user))) {
             responseMessage.setMessage(Constant.DENY_PERMISSION);
@@ -78,7 +78,7 @@ public class ChatController {
 
     @GetMapping(value = {"/page"})
     public ResponseEntity<?> getPageChat(
-            @PageableDefault(size = 5) Pageable pageable) {
+        @PageableDefault(size = 5) Pageable pageable) {
         User user = userDetailsService.getCurrentUser();
         if (!(userService.hasUserRole(user))) {
             responseMessage.setMessage(Constant.DENY_PERMISSION);
@@ -94,10 +94,10 @@ public class ChatController {
 
     @PostMapping(value = {"/new"})
     public ResponseEntity<?> createNewChat(
-            @Valid
-            @RequestBody
-            ChatDTO chatDTO,
-            BindingResult result) {
+        @Valid
+        @RequestBody
+        ChatDTO chatDTO,
+        BindingResult result) {
         User user = userDetailsService.getCurrentUser();
         if (!(userService.hasUserRole(user))) {
             responseMessage.setMessage(Constant.DENY_PERMISSION);
@@ -123,29 +123,24 @@ public class ChatController {
             return new ResponseEntity<>(responseMessage, HttpStatus.OK);
         }
         User targetUser = findUser.get();
-        Optional<Chat> findChat1 = chatService.findBySentUserIdAndRespUserId(user.getId(), targetUser.getId());
-        Optional<Chat> findChat2 = chatService.findBySentUserIdAndRespUserId(targetUser.getId(), user.getId());
-        if (findChat1.isPresent() || findChat2.isPresent()) {
-            if (findChat1.isPresent()) {
-                Chat chat = findChat1.get();
-                chat.setSentIn(chat.getSentIn() == null ? (new Date()) : chat.getSentIn());
-                chat.setLatestTime(new Date());
-                chatService.save(chat);
-            }
-            if (findChat2.isPresent()) {
-                Chat chat = findChat2.get();
-                chat.setRespIn(chat.getRespIn() == null ? (new Date()) : chat.getRespIn());
-                chat.setLatestTime(new Date());
-                chatService.save(chat);
-            }
-            responseMessage.setMessage(Constant.CHAT_SESSION_EXIST);
-            return new ResponseEntity<>(responseMessage, HttpStatus.OK);
-        }
         for (Role role : targetUser.getRoles()) {
             if (role.getRoleName() == RoleName.PM || role.getRoleName() == RoleName.ADMIN) {
                 responseMessage.setMessage(Constant.CHAT_SEND_AD_FAIL);
                 return new ResponseEntity<>(responseMessage, HttpStatus.OK);
             }
+        }
+        Optional<Chat> findChat = chatService.findChatBy2UserId(user.getId(), targetUser.getId());
+        if (findChat.isPresent()) {
+            Chat chat = findChat.get();
+            if (chat.getSentUser().getId().longValue() == user.getId().longValue()) {
+                chat.setSentIn(chat.getSentIn() == null ? (new Date()) : chat.getSentIn());
+            } else {
+                chat.setRespIn(chat.getRespIn() == null ? (new Date()) : chat.getRespIn());
+            }
+            chat.setLatestTime(new Date());
+            chatService.save(chat);
+            responseMessage.setMessage(Constant.CHAT_SESSION_EXIST);
+            return new ResponseEntity<>(responseMessage, HttpStatus.OK);
         }
         Chat chat = new Chat();
         chat.setSentUser(user);
@@ -158,7 +153,7 @@ public class ChatController {
 
     @PutMapping(value = {"/leave/{id}"})
     public ResponseEntity<?> leaveChatSession(
-            @PathVariable Long id) {
+        @PathVariable Long id) {
         User user = userDetailsService.getCurrentUser();
         if (!(userService.hasUserRole(user))) {
             responseMessage.setMessage(Constant.DENY_PERMISSION);

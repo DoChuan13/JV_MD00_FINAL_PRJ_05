@@ -8,10 +8,6 @@ import javax.transaction.Transactional;
 
 @Repository
 public interface ICommentRepository extends JpaRepository<Comment, Long> {
-
     @Transactional
     void deleteByUserId(Long id);
-
-    @Transactional
-    void deleteByPostId(Long id);
 }

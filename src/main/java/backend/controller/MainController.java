@@ -26,18 +26,8 @@ public class MainController {
         return view;
     }
 
-    /*@GetMapping("/user")
-    public ModelAndView showUserPage() {
-        return new ModelAndView("user/user");
-    }
-
-    @GetMapping("/admin")
-    public ModelAndView showAdminPage() {
-        return new ModelAndView("admin/admin");
-    }
-
     @GetMapping("*")
     public ModelAndView pageNotFound() {
         return new ModelAndView("404/error.404");
-    }*/
+    }
 }

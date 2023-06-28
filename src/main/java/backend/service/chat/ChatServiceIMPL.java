@@ -45,10 +45,10 @@ public class ChatServiceIMPL implements IChatService {
     }
 
     @Override
-    public Iterable<Chat> findBySentUserIdOrRespUserId(
-            Long sentId,
-            Long respId) {
-        return chatRepository.findBySentUserIdOrRespUserId(respId, respId);
+    public Optional<Chat> findChatBy2UserId(
+        Long id1,
+        Long id2) {
+        return chatRepository.findChatBy2UserId(id1, id2);
     }
 
     @Override
@@ -78,17 +78,11 @@ public class ChatServiceIMPL implements IChatService {
         return chatList;
     }
 
-    @Override
-    public Optional<Chat> findBySentUserIdAndRespUserId(
-            Long sentId,
-            Long respId) {
-        return chatRepository.findBySentUserIdAndRespUserId(sentId, respId);
-    }
 
     @Override
     public Page<Chat> findPageChatByUserId(
-            Long id,
-            Pageable pageable) {
+        Long id,
+        Pageable pageable) {
         List<Chat> chatList = (List<Chat>) findListChatByUserId(id);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), chatList.size());
@@ -97,7 +91,12 @@ public class ChatServiceIMPL implements IChatService {
     }
 
     @Override
-    public void deleteByUserId(Long id) {
-        chatRepository.deleteBySentUserIdOrRespUserId(id, id);
+    public void deleteAllChatByUserId(Long id) {
+        chatRepository.deleteAllChatByUserId(id);
+    }
+
+    @Override
+    public Iterable<Chat> findChatByUserId(Long id) {
+        return chatRepository.findChatByUserId(id);
     }
 }

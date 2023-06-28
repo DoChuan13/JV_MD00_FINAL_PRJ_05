@@ -18,8 +18,7 @@ public class PostImage {
     private Long id;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "postId", foreignKey = @ForeignKey(name = "fk_picture_post_Id"))
+    @Transient
     private Post post;
 
     private String urlImage;

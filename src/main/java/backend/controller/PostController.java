@@ -6,8 +6,6 @@ import backend.dto.response.ResponseMessage;
 import backend.model.Post;
 import backend.model.User;
 import backend.security.userprincipal.UserDetailsServiceIMPL;
-import backend.service.comment.ICommentService;
-import backend.service.like.ILikeService;
 import backend.service.post.IPostService;
 import backend.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +30,11 @@ public class PostController {
     @Autowired
     private IUserService userService;
     @Autowired
-    private ICommentService commentService;
-    @Autowired
-    private ILikeService likeService;
-    @Autowired
     private UserDetailsServiceIMPL userDetailsService;
 
     @GetMapping(value = "/page")
     public ResponseEntity<?> getPagePost(
-            @PageableDefault(size = 5) Pageable pageable) {
+        @PageableDefault(size = 5) Pageable pageable) {
         User user = userDetailsService.getCurrentUser();
         if (!(userService.hasUserRole(user))) {
             responseMessage.setMessage(Constant.DENY_PERMISSION);
@@ -56,7 +50,7 @@ public class PostController {
 
     @GetMapping(value = "/home/page")
     public ResponseEntity<?> getPageOwnPost(
-            @PageableDefault(size = 5) Pageable pageable) {
+        @PageableDefault(size = 5) Pageable pageable) {
         User user = userDetailsService.getCurrentUser();
         if (!(userService.hasUserRole(user))) {
             responseMessage.setMessage(Constant.DENY_PERMISSION);
@@ -102,16 +96,16 @@ public class PostController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> getDetailPost(
-            @PathVariable Long id) {
+        @PathVariable Long id) {
         return new ResponseEntity<>(postService.findById(id), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<?> createNewPost(
-            @Valid
-            @RequestBody
-            PostDTO postDTO,
-            BindingResult result) {
+        @Valid
+        @RequestBody
+        PostDTO postDTO,
+        BindingResult result) {
         User user = userDetailsService.getCurrentUser();
         if (!(userService.hasUserRole(user))) {
             responseMessage.setMessage(Constant.DENY_PERMISSION);
@@ -140,11 +134,11 @@ public class PostController {
 
     @PutMapping(value = {"/{id}"})
     public ResponseEntity<?> editCurrentPost(
-            @Valid
-            @PathVariable
-            Long id,
-            @RequestBody PostDTO postDTO,
-            BindingResult result) {
+        @Valid
+        @PathVariable
+        Long id,
+        @RequestBody PostDTO postDTO,
+        BindingResult result) {
         User user = userDetailsService.getCurrentUser();
         if (!(userService.hasUserRole(user))) {
             responseMessage.setMessage(Constant.DENY_PERMISSION);
@@ -171,11 +165,8 @@ public class PostController {
         }
         currentPost.setContent(postDTO.getContent());
         currentPost.setStatus(postDTO.getStatus());
-        if (postDTO.getImages().size() != 0 || currentPost.getImages().size() != 0) {
-            Long currentId = currentPost.getId();
-            postService.deleteOleImagesPostId(currentId);
-            currentPost.setImages(postDTO.getImages());
-        }
+        currentPost.setImages(postDTO.getImages());
+
         postService.save(currentPost);
 
         responseMessage.setMessage(Constant.POST_UPDATE_SUCCESS);
@@ -184,7 +175,7 @@ public class PostController {
 
     @DeleteMapping(value = {"/{id}"})
     public ResponseEntity<?> deleteCurrentPost(
-            @PathVariable Long id) {
+        @PathVariable Long id) {
         User user = userDetailsService.getCurrentUser();
         if (!(userService.hasUserRole(user))) {
             responseMessage.setMessage(Constant.DENY_PERMISSION);
@@ -203,8 +194,6 @@ public class PostController {
             responseMessage.setMessage(Constant.POST_NOT_OWN);
             return new ResponseEntity<>(responseMessage, HttpStatus.OK);
         }
-        commentService.deleteByPostId(id);
-        likeService.deleteByPostId(id);
         postService.deleteById(id);
         responseMessage.setMessage(Constant.POST_DELETE_SUCCESS);
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);

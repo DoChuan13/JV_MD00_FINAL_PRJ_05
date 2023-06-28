@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -35,10 +36,10 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<?> createNewComment(
-            @Valid
-            @RequestBody
-            CommentDTO commentDTO,
-            BindingResult result) {
+        @Valid
+        @RequestBody
+        CommentDTO commentDTO,
+        BindingResult result) {
         User user = userDetailsService.getCurrentUser();
         if (!(userService.hasUserRole(user))) {
             responseMessage.setMessage(Constant.DENY_PERMISSION);
@@ -58,23 +59,25 @@ public class CommentController {
             responseMessage.setMessage(Constant.POST_NOT_FOUND);
             return new ResponseEntity<>(responseMessage, HttpStatus.OK);
         }
+        Post currentPost = findPost.get();
+        List<Comment> comments = currentPost.getComments();
         Comment comment = new Comment();
-        comment.setPost(findPost.get());
         comment.setComment(commentDTO.getComment());
         comment.setUser(user);
+        comments.add(comment);
 
-        commentService.save(comment);
+        postService.save(currentPost);
         responseMessage.setMessage(Constant.COMMENT_CREATE_SUCCESS);
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @PutMapping(value = {"/{id}"})
     public ResponseEntity<?> editCurrentComment(
-            @Valid
-            @PathVariable
-            Long id,
-            @RequestBody CommentDTO commentDTO,
-            BindingResult result) {
+        @Valid
+        @PathVariable
+        Long id,
+        @RequestBody CommentDTO commentDTO,
+        BindingResult result) {
         User user = userDetailsService.getCurrentUser();
         if (!(userService.hasUserRole(user))) {
             responseMessage.setMessage(Constant.DENY_PERMISSION);
@@ -89,28 +92,39 @@ public class CommentController {
             /*System.out.println(result.getFieldError());*/
             return new ResponseEntity<>(responseMessage, HttpStatus.OK);
         }
-        Optional<Comment> findComment = commentService.findById(id);
+        Optional<Comment> findComment = commentService.findCommentByCommentId(id);
         if (!findComment.isPresent()) {
             responseMessage.setMessage(Constant.COMMENT_NOT_FOUND);
             return new ResponseEntity<>(responseMessage, HttpStatus.OK);
         }
-        Comment comment = findComment.get();
-        if (!(commentService.checkOwnerComment(comment))) {
+        Optional<Post> findPost = postService.findPostsByCommentId(id);
+        if (!findPost.isPresent()) {
+            responseMessage.setMessage(Constant.POST_NOT_FOUND);
+            return new ResponseEntity<>(responseMessage, HttpStatus.OK);
+        }
+        Comment currentComment = findComment.get();
+        Post currentPost = findPost.get();
+        List<Comment> commentList = currentPost.getComments();
+        if (!(commentService.checkOwnerComment(currentComment))) {
             responseMessage.setMessage(Constant.COMMENT_NOT_OWN);
             return new ResponseEntity<>(responseMessage, HttpStatus.OK);
         }
-        /*comment.setPost(findPost.get());*/
-        comment.setComment(commentDTO.getComment());
-        comment.setUser(user);
 
-        commentService.save(comment);
+        for (Comment comment : commentList) {
+            if (comment.getId().longValue() == id.longValue()) {
+                comment.setComment(commentDTO.getComment());
+                break;
+            }
+        }
+
+        postService.save(currentPost);
         responseMessage.setMessage(Constant.COMMENT_UPDATE_SUCCESS);
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @DeleteMapping(value = {"/{id}"})
     public ResponseEntity<?> deleteCurrentComment(
-            @PathVariable Long id) {
+        @PathVariable Long id) {
         User user = userDetailsService.getCurrentUser();
         if (!(userService.hasUserRole(user))) {
             responseMessage.setMessage(Constant.DENY_PERMISSION);
@@ -120,17 +134,31 @@ public class CommentController {
             responseMessage.setMessage(Constant.ACCOUNT_BLOCK);
             return new ResponseEntity<>(responseMessage, HttpStatus.OK);
         }
-        Optional<Comment> findComment = commentService.findById(id);
+        Optional<Comment> findComment = commentService.findCommentByCommentId(id);
         if (!findComment.isPresent()) {
             responseMessage.setMessage(Constant.COMMENT_NOT_FOUND);
             return new ResponseEntity<>(responseMessage, HttpStatus.OK);
         }
-        Comment comment = findComment.get();
-        if (!(commentService.checkOwnerComment(comment))) {
+        Optional<Post> findPost = postService.findPostsByCommentId(id);
+        if (!findPost.isPresent()) {
+            responseMessage.setMessage(Constant.POST_NOT_FOUND);
+            return new ResponseEntity<>(responseMessage, HttpStatus.OK);
+        }
+        Comment currentComment = findComment.get();
+        Post currentPost = findPost.get();
+        List<Comment> commentList = currentPost.getComments();
+        if (!(commentService.checkOwnerComment(currentComment))) {
             responseMessage.setMessage(Constant.COMMENT_NOT_OWN);
             return new ResponseEntity<>(responseMessage, HttpStatus.OK);
         }
-        commentService.deleteById(id);
+        for (Comment comment : commentList) {
+            if (comment.getId().longValue() == id.longValue()) {
+                commentList.remove(comment);
+                break;
+            }
+        }
+
+        postService.save(currentPost);
         responseMessage.setMessage(Constant.COMMENT_DELETE_SUCCESS);
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }

@@ -5,16 +5,14 @@ import backend.dto.request.PasswordDTO;
 import backend.dto.request.UserDTO;
 import backend.dto.response.ResponseMessage;
 import backend.model.Chat;
-import backend.model.Post;
 import backend.model.Role;
 import backend.model.User;
 import backend.model.enums.RoleName;
+import backend.repository.ICommentRepository;
+import backend.repository.ILikeRepository;
 import backend.security.userprincipal.UserDetailsServiceIMPL;
 import backend.service.chat.IChatService;
-import backend.service.chat.detail.IChatDetailService;
-import backend.service.comment.ICommentService;
 import backend.service.friend.IFriendService;
-import backend.service.like.ILikeService;
 import backend.service.post.IPostService;
 import backend.service.role.IRoleService;
 import backend.service.user.IUserService;
@@ -46,15 +44,13 @@ public class UserController {
     @Autowired
     private IRoleService roleService;
     @Autowired
-    private IPostService postService;
-    @Autowired
-    private ICommentService commentService;
-    @Autowired
-    private ILikeService likeService;
-    @Autowired
     private IChatService chatService;
     @Autowired
-    private IChatDetailService chatDetailService;
+    private IPostService postService;
+    @Autowired
+    private ILikeRepository likeRepository;
+    @Autowired
+    private ICommentRepository commentRepository;
     @Autowired
     private IFriendService friendService;
     @Autowired
@@ -172,7 +168,8 @@ public class UserController {
     @PutMapping(value = {"/edit/password/{id}"})
     public ResponseEntity<?> editUserPassword(
         @Valid
-        @PathVariable Long id,
+        @PathVariable
+        Long id,
         @RequestBody PasswordDTO passwordDTO,
         BindingResult result) {
         User user = userDetailsService.getCurrentUser();
@@ -339,21 +336,12 @@ public class UserController {
             responseMessage.setMessage(Constant.USER_DENY_DELETE_ADMIN);
             return new ResponseEntity<>(responseMessage, HttpStatus.OK);
         }
-        List<Chat> chats = (List<Chat>) chatService.findBySentUserIdOrRespUserId(id, id);
-        for (Chat chat : chats) {
-            Long chatId = chat.getId();
-            chatDetailService.deleteByChatId(chatId);
+        List<Chat> findChats = (List<Chat>) chatService.findChatByUserId(id);
+        for (Chat chat : findChats) {
+            chatService.deleteById(chat.getId());
         }
-        chatDetailService.deleteByUserId(id);
-        chatService.deleteByUserId(id);
-        List<Post> posts = (List<Post>) postService.findPostsByUserId(id);
-        for (Post post : posts) {
-            Long postId = post.getId();
-            commentService.deleteByPostId(postId);
-            likeService.deleteByPostId(postId);
-        }
-        likeService.deleteByUserId(id);
-        commentService.deleteByUserId(id);
+        likeRepository.deleteByUserId(id);
+        commentRepository.deleteByUserId(id);
         postService.deleteByUserId(id);
         friendService.deleteByUserId(id);
         userService.deleteById(id);
