@@ -1,41 +1,24 @@
 package backend.model;
 
+import backend.model.enums.RoleName;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "roles", uniqueConstraints = @UniqueConstraint(name = "uk_role_roleName", columnNames = "roleName"))
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    @Enumerated(EnumType.STRING)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     @NaturalId
+    @Enumerated(EnumType.STRING)
     @Column(length = 60)
-    private RoleName name;
-
-    public Role() {
-    }
-
-    public Role(Long id, RoleName name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public RoleName getName() {
-        return name;
-    }
-
-    public void setName(RoleName name) {
-        this.name = name;
-    }
+    private RoleName roleName;
 }

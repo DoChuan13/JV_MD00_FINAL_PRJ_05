@@ -9,12 +9,18 @@ public class JwtResponse {
     private String token;
     private String type = "Bearer";
     private String name;
+    private String avatar;
     private Collection<? extends GrantedAuthority> roles;
 
     public JwtResponse() {
     }
 
-    public JwtResponse(Long id, String token, String type, String name, Collection<? extends GrantedAuthority> roles) {
+    public JwtResponse(
+            Long id,
+            String token,
+            String type,
+            String name,
+            Collection<? extends GrantedAuthority> roles) {
         this.id = id;
         this.token = token;
         this.type = type;
@@ -22,10 +28,15 @@ public class JwtResponse {
         this.roles = roles;
     }
 
-    public JwtResponse(String token, String name, Collection<? extends GrantedAuthority> authorities) {
+    public JwtResponse(
+            String token,
+            String name,
+            String avatar,
+            Collection<? extends GrantedAuthority> roles) {
         this.token = token;
         this.name = name;
-        this.roles = authorities;
+        this.avatar = avatar;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -60,11 +71,31 @@ public class JwtResponse {
         this.name = name;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public Collection<? extends GrantedAuthority> getRoles() {
         return roles;
     }
 
     public void setRoles(Collection<? extends GrantedAuthority> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return "JwtResponse{" +
+               "id=" + id +
+               ", token='" + token + '\'' +
+               ", type='" + type + '\'' +
+               ", name='" + name + '\'' +
+               ", name='" + avatar + '\'' +
+               ", roles=" + roles +
+               '}';
     }
 }
