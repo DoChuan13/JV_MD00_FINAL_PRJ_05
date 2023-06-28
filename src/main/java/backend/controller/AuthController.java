@@ -79,7 +79,7 @@ public class AuthController {
         Set<String> strRoles = signUpDTO.getRoles();
         Set<Role> roles = new HashSet<>();
         strRoles.forEach(role -> {
-            switch (role) {
+            switch (role.toUpperCase()) {
                 case "ADMIN":
                     Role adminRole = roleService.findByRoleName(RoleName.ADMIN).orElseThrow(
                         () -> new RuntimeException(Constant.ROLE_NOT_FOUND));
