@@ -14,7 +14,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 @CrossOrigin(origins = {"*"})
 public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
-    private final String url = "http://localhost:4200";
+    private final String url = "https://fakebook-dochuan.netlify.app";
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
