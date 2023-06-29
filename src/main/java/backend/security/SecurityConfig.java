@@ -70,21 +70,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
-
-    /*@Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(
-            Arrays.asList("https://laptrinhjv-762165465e2b.herokuapp.com/", "https://fakebook-dochuan.netlify.app",
-                          "https://laptrinhjv-762165465e2b.herokuapp.com/ws"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Headers", "Access-Control-Allow-Origin",
-                                                      "Access-Control-Request-Method", "Access-Control-Request-Headers",
-                                                      "Origin",
-                                                      "Cache-Control", "Content-Type"));
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        configuration.setAllowCredentials(true);
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }*/
 }
