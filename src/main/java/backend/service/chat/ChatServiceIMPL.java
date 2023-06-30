@@ -9,10 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ChatServiceIMPL implements IChatService {
@@ -63,7 +60,8 @@ public class ChatServiceIMPL implements IChatService {
                 timeCheck = chat.getRespIn();
             }
             chatDetailFilter = new ArrayList<>();
-            for (ChatDetail detail : chat.getChatDetails())
+            List<ChatDetail> chatDetailList = chat.getChatDetails();
+            for (ChatDetail detail : chatDetailList)
                 if (detail.getSentTime().compareTo(timeCheck) >= 0) {
                     ChatDetail chatDetail = new ChatDetail();
                     chatDetail.setId(detail.getId());
@@ -72,6 +70,8 @@ public class ChatServiceIMPL implements IChatService {
                     chatDetail.setSentTime(detail.getSentTime());
                     chatDetailFilter.add(chatDetail);
                 }
+            ChatDetailComparator detailComparator = new ChatDetailComparator();
+            chatDetailFilter.sort(detailComparator);
             chat.setChatDetails(chatDetailFilter);
         }
         /*System.out.println(chatDetailFilter);*/
@@ -98,5 +98,13 @@ public class ChatServiceIMPL implements IChatService {
     @Override
     public Iterable<Chat> findChatByUserId(Long id) {
         return chatRepository.findChatByUserId(id);
+    }
+
+    private static class ChatDetailComparator implements Comparator<ChatDetail> {
+
+        @Override
+        public int compare(ChatDetail o1, ChatDetail o2) {
+            return o1.getSentTime().compareTo(o2.getSentTime());
+        }
     }
 }
