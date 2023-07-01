@@ -8,7 +8,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.util.HtmlUtils;
 
 @Controller
 @CrossOrigin(origins = {"*"})
@@ -20,7 +19,11 @@ public class WebSocketController {
     public WebsocketDTO greeting(MessageDTO message) throws Exception {
         Thread.sleep(1000); // simulated delay
         logger.info("Response===>" + message.getChat().getId());
-        /*return new WebsocketDTO(HtmlUtils.htmlEscape(String.valueOf(message)));*/
-        return new WebsocketDTO(HtmlUtils.htmlEscape(String.valueOf(message.getChat().getId())));
+        WebsocketDTO websocketDTO = new WebsocketDTO();
+        websocketDTO.setId(message.getChat().getId());
+        websocketDTO.setSentUser(message.getChatResponse().getSentUser());
+        websocketDTO.setRespUser(message.getChatResponse().getRespUser());
+        return websocketDTO;
+        /*return new WebsocketDTO(HtmlUtils.htmlEscape(String.valueOf(message.getChat().getId())));*/
     }
 }

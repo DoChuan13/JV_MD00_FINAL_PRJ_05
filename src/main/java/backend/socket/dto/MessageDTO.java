@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class MessageDTO {
+    private Chat chatResponse;
     private String content;
     private Chat chat;
 }
